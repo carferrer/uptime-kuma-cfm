@@ -8,7 +8,9 @@ image: "ghcr.io/carferrer/uptime-kuma-cfm"
 image_tag: "latest"
 webui: http://[HOST]:[PORT:3001]
 init: false
-arch: amd64
+arch: 
+  - amd64
+  - aarch64
 ports:
   3001/tcp: 3001
 ports_description:
