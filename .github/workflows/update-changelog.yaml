@@ -3,6 +3,13 @@ name: Actualizar CHANGELOG automáticamente
 on:
   release:
     types: [published]
+    
+  workflow_dispatch:
+    inputs:
+        motivo:
+          description: 'Ejecución manual'
+          required: false
+
 
 permissions:
   contents: write
