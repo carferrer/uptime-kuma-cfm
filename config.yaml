@@ -1,6 +1,6 @@
 ---
 name: Uptime Kuma
-version: 2026.08.25
+version: 2026.08.26
 slug: uptime-kuma-cfm
 description: Sistema autoalojado de Kuma que permite la ejecucion dentro de un iframe "Uptime Robot"
 url: https://github.com/carferrer/uptime-kuma-cfm
@@ -17,9 +17,9 @@ ports_description:
   3001/tcp: Web interface
 discovery:
   - uptime_kuma
-ingress: true
-ingress_port: 3001
-ingress_stream: true
+ingress: false
+#ingress_port: 3001
+#ingress_stream: true
 panel: true
 panel_icon: "mdi:server-network"
 panel_title: "Uptime Kuma" 
