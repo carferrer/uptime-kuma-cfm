@@ -1,0 +1,34 @@
+name: Builder
+
+on:
+  release:
+    types: [published] # Se ejecuta automáticamente cuando creas una "Release" en GitHub
+
+jobs:
+  build:
+    name: Build Addon
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # Permiso obligatorio para poder subir la imagen a GitHub Packages
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Login en GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }} # GitHub genera esta clave automáticamente
+
+      - name: Compilar y Publicar Addon
+        uses: home-assistant/builder@master
+        with:
+          args: |
+            --all \
+            --target /workspace \
+            --image "${{ github.repository_owner }}/uptime-kuma-cfm-{arch}" \
+            --registry ghcr.io \
+            --docker-hub ghcr.io
