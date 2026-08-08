@@ -92,3 +92,4 @@ LABEL \
     org.opencontainers.image.revision=${BUILD_REF} \
     org.opencontainers.image.version=${BUILD_VERSION}
 ENV UPTIME_KUMA_DISABLE_FRAME_SAMEORIGIN="1"
+CMD ["sh", "-c", "export UPTIME_KUMA_BASE_URL=\"/api/hassio_ingress/$(curl -s -H \"Authorization: Bearer $SUPERVISOR_TOKEN\" http://supervisor/addons/self/info | jq -r '.data.ingress_url' | sed 's/\/api\/hassio_ingress\///')/\" && node server/server.js"]
