@@ -6,7 +6,7 @@ on:
 
 env:
   ARCHITECTURES: '["amd64", "aarch64"]'
-  IMAGE_NAME: my-image
+  IMAGE_NAME: uptime-kuma-cff
 
 permissions:
   contents: read
@@ -22,7 +22,7 @@ jobs:
 
       - name: Get build matrix
         id: matrix
-        uses: home-assistant/builder/actions/prepare-multi-arch-matrix@[version]
+        uses: home-assistant/builder/actions/prepare-multi-arch-matrix@2026.08.05
         with:
           architectures: ${{ env.ARCHITECTURES }}
           image-name: ${{ env.IMAGE_NAME }}
