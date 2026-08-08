@@ -1,6 +1,6 @@
 ---
 name: Uptime Kuma
-version: 2026.08.28
+version: 2026.08.29
 slug: uptime-kuma-cfm
 description: Sistema autoalojado de Kuma que permite la ejecucion dentro de un iframe "Uptime Robot"
 url: https://github.com/carferrer/uptime-kuma-cfm
