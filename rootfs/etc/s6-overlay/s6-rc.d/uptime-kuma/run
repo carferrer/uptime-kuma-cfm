@@ -6,6 +6,14 @@
 # ==============================================================================
 export NODE_PATH=/opt/node_modules
 
+#añadido para el ingress
+# 1. Obtener la ruta dinámica que genera Home Assistant para el Ingress
+INGRESS_PATH=$(bashio::addon.ingress_entry)
+# 2. Exportar la variable obligatoria para mapear los recursos web (.js, .css)
+export UPTIME_KUMA_BASE_URL="${INGRESS_PATH}/"
+bashio::log.info "Configurando Ingress Base URL en: ${UPTIME_KUMA_BASE_URL}"
+#añadido para el ingress
+
 cd /opt/uptime-kuma || bashio::exit.nok "Could not change directory to Uptime Kuma"
 
 bashio::log.info "Starting Uptime Kuma..."
