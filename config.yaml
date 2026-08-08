@@ -15,3 +15,5 @@ ports_description:
   3001/tcp: Web interface
 discovery:
   - uptime_kuma_cfm
+hassio_role: manager
+hassio_api: true
