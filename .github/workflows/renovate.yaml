@@ -1,0 +1,17 @@
+name: Renovate Bot
+on:
+  # Te permite ejecutarlo manualmente desde la pestaña Actions
+  workflow_dispatch: 
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v7
+
+      - name: Ejecutar Renovate
+        uses: renovatebot/github-action@v46.2.2  # Usa siempre la última versión disponible
+        with:
+          configurationFile: .github/renovate.json
+          token: ${{ secrets.GITHUB_TOKEN }}
