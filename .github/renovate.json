@@ -54,7 +54,8 @@
       "versioning": "loose"
     },
     {
-      "matchDatasources": ["repology"]
+      "matchDatasources": ["repology"],
+      "automerge": false
     },
     {
       "groupName": "App base image",
@@ -63,12 +64,14 @@
     {
       "groupName": "App base image",
       "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false
     },
     {
       "matchDatasources": ["github-releases"],
       "matchDepNames": ["louislam/uptime-kuma"],
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false
     },
     {
       "matchManagers": ["pip_requirements"],
@@ -81,7 +84,8 @@
     },
     {
       "matchManagers": ["pip_requirements"],
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false
     }
   ]
 }
