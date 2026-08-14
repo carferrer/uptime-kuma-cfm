@@ -1,24 +1,27 @@
 {
-  "$schema": "https://renovatebot.com",
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "rebaseWhen": "behind-base-branch",
-  "labels": ["dependencies"],
+  "dependencyDashboard": true,
+  "labels": ["dependencies", "no-stale"],
   "commitMessagePrefix": "⬆️",
   "commitMessageTopic": "{{depName}}",
-  "dependencyDashboard": false,
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["(^|/)Dockerfile$", "(^|/)build\\.yaml$"],
+      "managerFilePatterns": ["//Dockerfile$/", "//build.yaml$/"],
+      "matchStringsStrategy": "any",
       "matchStrings": [
-        "ARG BUILD_FROM=(?<depName>.*?):(?<currentValue>.*)"
+        "ARG BUILD_FROM=(?<depName>.*?):(?<currentValue>.*?)\\s+",
+        "(aarch64|amd64):\\s[\"']?(?<depName>.*?):(?<currentValue>.*?)[\"']?\\s"
       ],
       "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["(^|/)Dockerfile$"],
+      "managerFilePatterns": ["//Dockerfile$/"],
+      "matchStringsStrategy": "any",
       "matchStrings": [
-        "\\s+(?<package>[a-z0-9][a-z0-9-]+)=(?<currentValue>[a-z0-9-_.]+)"
+        "\\s\\s(?<package>[a-z0-9][a-z0-9-]+)=(?<currentValue>[a-z0-9-_.]+)\\s+"
       ],
       "versioningTemplate": "loose",
       "datasourceTemplate": "repology",
@@ -26,18 +29,18 @@
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["(^|/)Dockerfile$"],
+      "managerFilePatterns": ["//Dockerfile$/"],
       "matchStrings": [
-        "ARG UPTIME_KUMA_VERSION=\"(?<currentValue>.*?)\""
+        "ARG UPTIME_KUMA_VERSION=[\"']?(?<currentValue>.+?)[\"']?\\s+"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "louislam/uptime-kuma"
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["(^|/)Dockerfile$"],
+      "managerFilePatterns": ["//Dockerfile$/"],
       "matchStrings": [
-        "ARG CLOUDFLARED_VERSION=\"(?<currentValue>.*?)\""
+        "ARG CLOUDFLARED_VERSION=[\"']?(?<currentValue>.+?)[\"']?\\s+"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "cloudflare/cloudflared",
@@ -51,8 +54,34 @@
       "versioning": "loose"
     },
     {
-      "matchAll": true,
-      "automerge": false
+      "matchDatasources": ["repology"]
+    },
+    {
+      "groupName": "App base image",
+      "matchDatasources": ["docker"]
+    },
+    {
+      "groupName": "App base image",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchDatasources": ["github-releases"],
+      "matchDepNames": ["louislam/uptime-kuma"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchManagers": ["pip_requirements"],
+      "addLabels": ["python"]
+    },
+    {
+      "matchManagers": ["pip_requirements"],
+      "matchDepTypes": ["dev"],
+      "rangeStrategy": "pin"
+    },
+    {
+      "matchManagers": ["pip_requirements"],
+      "matchUpdateTypes": ["minor", "patch"]
     }
   ]
 }
