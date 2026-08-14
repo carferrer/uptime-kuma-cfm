@@ -28,20 +28,10 @@
       "customType": "regex",
       "managerFilePatterns": ["(^|/)Dockerfile$"],
       "matchStrings": [
-        "ARG UPTIME_KUMA_VERSION=\"(?<currentValue>[^\"]+)\""
+        "ARG (?<registryUrl>UPTIME_KUMA|CLOUDFLARED)_VERSION=\"(?<currentValue>[^\"]+)\""
       ],
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "louislam/uptime-kuma"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["(^|/)Dockerfile$"],
-      "matchStrings": [
-        "ARG CLOUDFLARED_VERSION=\"(?<currentValue>[^\"]+)\""
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "cloudflare/cloudflared",
-      "versioningTemplate": "loose"
+      "depNameTemplate": "{{#if (eq registryUrl 'UPTIME_KUMA')}}louislam/uptime-kuma{{else}}cloudflare/cloudflared{{/if}}"
     }
   ],
   "packageRules": [
