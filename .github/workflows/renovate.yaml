@@ -18,5 +18,6 @@ jobs:
         uses: renovatebot/github-action@v46.2.2  # Usa siempre la última versión disponible
         with:
           configurationFile: .github/renovate.json
-          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          RENOVATE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RENOVATE_REPOSITORIES: ${{ github.repository }}
