@@ -3,6 +3,10 @@ on:
   # Te permite ejecutarlo manualmente desde la pestaña Actions
   workflow_dispatch: 
 
+  schedule:
+    # Se ejecuta todas las noches a las 2:00 AM UTC
+    - cron: '0 2 * * *'
+
 jobs:
   renovate:
     runs-on: ubuntu-latest
