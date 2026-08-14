@@ -4,7 +4,7 @@
   "labels": ["dependencies"],
   "commitMessagePrefix": "⬆️",
   "commitMessageTopic": "{{depName}}",
-  "dependencyDashboard": false,
+  "dependencyDashboard": true,
   "customManagers": [
     {
       "customType": "regex",
@@ -28,7 +28,7 @@
       "customType": "regex",
       "managerFilePatterns": ["(^|/)Dockerfile$"],
       "matchStrings": [
-        "ARG UPTIME_KUMA_VERSION=[\\u0022']?(?<currentValue>[0-9.]+)[\\u0022']?"
+        "ARG UPTIME_KUMA_VERSION=\\s*[\\u0022']?(?<currentValue>[0-9.]+)[\\u0022']?\\s*"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "louislam/uptime-kuma"
@@ -37,7 +37,7 @@
       "customType": "regex",
       "managerFilePatterns": ["(^|/)Dockerfile$"],
       "matchStrings": [
-        "ARG CLOUDFLARED_VERSION=[\\u0022']?(?<currentValue>[0-9.]+)[\\u0022']?"
+        "ARG CLOUDFLARED_VERSION=\\s*[\\u0022']?(?<currentValue>[0-9.]+)[\\u0022']?\\s*"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "cloudflare/cloudflared",
