@@ -1,27 +1,26 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "$schema": "https://renovatebot.com",
   "rebaseWhen": "behind-base-branch",
-  "dependencyDashboard": true,
-  "labels": ["dependencies", "no-stale"],
+  "labels": ["dependencies"],
   "commitMessagePrefix": "⬆️",
   "commitMessageTopic": "{{depName}}",
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["//Dockerfile$/", "//build.yaml$/"],
+      "managerFilePatterns": ["(^|/)Dockerfile$", "(^|/)build\\.yaml$"],
       "matchStringsStrategy": "any",
       "matchStrings": [
-        "ARG BUILD_FROM=(?<depName>.*?):(?<currentValue>.*?)\\s+",
-        "(aarch64|amd64):\\s[\"']?(?<depName>.*?):(?<currentValue>.*?)[\"']?\\s"
+        "ARG BUILD_FROM=(?<depName>.*?):(?<currentValue>.*?)(?:\\s|$)",
+        "(aarch64|amd64):\\s*[\"']?(?<depName>.*?):(?<currentValue>.*?)[\"']?(?:\\s|$)"
       ],
       "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["//Dockerfile$/"],
+      "managerFilePatterns": ["(^|/)Dockerfile$"],
       "matchStringsStrategy": "any",
       "matchStrings": [
-        "\\s\\s(?<package>[a-z0-9][a-z0-9-]+)=(?<currentValue>[a-z0-9-_.]+)\\s+"
+        "\\s+(?<package>[a-z0-9][a-z0-9-]+)=(?<currentValue>[a-z0-9-_.]+)(?:\\s|\\\\|$)"
       ],
       "versioningTemplate": "loose",
       "datasourceTemplate": "repology",
@@ -29,18 +28,18 @@
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["//Dockerfile$/"],
+      "managerFilePatterns": ["(^|/)Dockerfile$"],
       "matchStrings": [
-        "ARG UPTIME_KUMA_VERSION=[\"']?(?<currentValue>.+?)[\"']?\\s+"
+        "ARG UPTIME_KUMA_VERSION=[\"']?(?<currentValue>[0-9.]+)[\"']?(?:\\s|$)"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "louislam/uptime-kuma"
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["//Dockerfile$/"],
+      "managerFilePatterns": ["(^|/)Dockerfile$"],
       "matchStrings": [
-        "ARG CLOUDFLARED_VERSION=[\"']?(?<currentValue>.+?)[\"']?\\s+"
+        "ARG CLOUDFLARED_VERSION=[\"']?(?<currentValue>[0-9.]+)[\"']?(?:\\s|$)"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "cloudflare/cloudflared",
@@ -56,10 +55,6 @@
     {
       "matchDatasources": ["repology"],
       "automerge": true
-    },
-    {
-      "groupName": "App base image",
-      "matchDatasources": ["docker"]
     },
     {
       "groupName": "App base image",
