@@ -1,3 +1,7 @@
+# Versión 2026.08.33 (2026-08-24)
+
+**Full Changelog**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.08.32...2026.08.33
+
 # Versión 2026.08.32 (2026-08-24)
 
 ## What's Changed
