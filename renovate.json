@@ -2,5 +2,35 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "timezone": "Europe/Madrid",
+
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Uptime Kuma",
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
+      ],
+      "matchStrings": [
+        "ARG UPTIME_KUMA_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "louislam/uptime-kuma",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Cloudflared",
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
+      ],
+      "matchStrings": [
+        "ARG CLOUDFLARED_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "cloudflare/cloudflared",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose"
+    }
   ]
 }
