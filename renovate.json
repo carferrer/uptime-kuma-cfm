@@ -4,6 +4,7 @@
     "config:recommended"
   ],
   "timezone": "Europe/Madrid",
+  "dependencyDashboard": true,
 
   "customManagers": [
     {
@@ -31,6 +32,18 @@
       "depNameTemplate": "cloudflare/cloudflared",
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "loose"
+    },
+    {
+      "customType": "regex",
+      "description": "Alpine APK packages",
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
+      ],
+      "matchStrings": [
+        "(?<depName>build-base|py3-pip|iputils|nodejs|npm|python3|setpriv)=(?<currentValue>[^\\\\\\s]+)"
+      ],
+      "datasourceTemplate": "apk",
+      "registryUrlTemplate": "https://dl-cdn.alpinelinux.org/alpine?branch=edge&components=main,community&arch=aarch64"
     }
   ]
 }
