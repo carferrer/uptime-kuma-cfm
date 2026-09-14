@@ -1,3 +1,12 @@
+# Versión 2026.09.02 (2026-09-14)
+
+## What's Changed
+* Update setpriv APK package to v2.42.3-r1 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/22
+* Update nodejs APK package to v24.18.1-r2 - autoclosed by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/21
+
+
+**Full Changelog**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.09.01...2026.09.02
+
 # Versión 2026.09.01 (2026-09-14)
 
 ## What's Changed
