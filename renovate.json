@@ -1,12 +1,55 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    "helpers:pinGitHubActionDigests"
   ],
+  "rebaseWhen": "behind-base-branch",
   "timezone": "Europe/Madrid",
   "dependencyDashboard": true,
+  "labels": [
+    "dependencies"
+  ],
+  "commitMessagePrefix": "⬆️",
+  "commitMessageTopic": "{{depName}}",
+
+  "customDatasources": {
+    "alpine": {
+      "defaultRegistryUrlTemplate": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/",
+      "format": "html"
+    }
+  },
 
   "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Docker base image",
+      "managerFilePatterns": [
+        "/^Dockerfile$/",
+        "/^build\\.yaml$/"
+      ],
+      "matchStringsStrategy": "any",
+      "matchStrings": [
+        "ARG BUILD_FROM=(?<depName>.*?):(?<currentValue>.*?)\\s+",
+        "(aarch64|amd64):\\s[\"']?(?<depName>.*?):(?<currentValue>.*?)[\"']?\\s"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Alpine APK packages",
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
+      ],
+      "matchStringsStrategy": "any",
+      "matchStrings": [
+        "\\s\\s(?<package>[a-z0-9][a-z0-9-]+)=(?<currentValue>[a-z0-9-_.]+)\\s+"
+      ],
+      "versioningTemplate": "loose",
+      "datasourceTemplate": "custom.alpine",
+      "depNameTemplate": "alpine_3_24/{{package}}",
+      "extractVersionTemplate": "^{{{package}}}-(?<version>\\d.*)\\.apk$"
+    },
     {
       "customType": "regex",
       "description": "Uptime Kuma",
@@ -14,11 +57,10 @@
         "/^Dockerfile$/"
       ],
       "matchStrings": [
-        "ARG UPTIME_KUMA_VERSION=\"(?<currentValue>[^\"]+)\""
+        "ARG UPTIME_KUMA_VERSION=[\"']?(?<currentValue>.+?)[\"']?\\s+"
       ],
-      "depNameTemplate": "louislam/uptime-kuma",
       "datasourceTemplate": "github-releases",
-      "versioningTemplate": "semver"
+      "depNameTemplate": "louislam/uptime-kuma"
     },
     {
       "customType": "regex",
@@ -27,23 +69,43 @@
         "/^Dockerfile$/"
       ],
       "matchStrings": [
-        "ARG CLOUDFLARED_VERSION=\"(?<currentValue>[^\"]+)\""
+        "ARG CLOUDFLARED_VERSION=[\"']?(?<currentValue>.+?)[\"']?\\s+"
       ],
-      "depNameTemplate": "cloudflare/cloudflared",
       "datasourceTemplate": "github-releases",
+      "depNameTemplate": "cloudflare/cloudflared",
       "versioningTemplate": "loose"
+    }
+  ],
+
+  "packageRules": [
+    {
+      "matchDatasources": [
+        "custom.alpine"
+      ],
+      "matchPackageNames": [
+        "alpine_3_24/*"
+      ],
+      "versioning": "loose"
     },
     {
-      "customType": "regex",
-      "description": "Alpine APK packages",
-      "managerFilePatterns": [
-        "/^Dockerfile$/"
+      "description": "Packages that live in the Alpine community repository",
+      "matchDatasources": [
+        "custom.alpine"
       ],
-      "matchStrings": [
-        "(?<depName>build-base|py3-pip|iputils|nodejs|npm|python3|setpriv)=(?<currentValue>[^\\\\\\s]+)"
+      "matchPackageNames": [
+        "alpine_3_24/npm"
       ],
-      "datasourceTemplate": "apk",
-      "registryUrlTemplate": "https://dl-cdn.alpinelinux.org/alpine?branch=edge&components=main,community&arch=aarch64"
+      "registryUrls": [
+        "https://dl-cdn.alpinelinux.org/alpine/v3.24/community/x86_64/"
+      ]
+    },
+    {
+      "matchManagers": [
+        "pip_requirements"
+      ],
+      "addLabels": [
+        "python"
+      ]
     }
   ]
 }
