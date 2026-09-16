@@ -3,10 +3,17 @@ name: Build
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Versión a compilar (por ejemplo: 2026.09.02)"
+        required: true
+        type: string
 
 env:
   ARCHITECTURES: '["amd64", "aarch64"]'
   IMAGE_NAME: uptime-kuma-cfm
+  VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.event.release.tag_name }}
 
 permissions:
   contents: read
@@ -32,9 +39,9 @@ jobs:
     needs: init
     runs-on: ${{ matrix.os }}
     permissions:
-      contents: read # To check out the code
-      id-token: write # Write needed for Cosign signing (issue OIDC token for signing)
-      packages: write # To push built images to GitHub Container Registry
+      contents: read
+      id-token: write
+      packages: write
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
@@ -48,18 +55,18 @@ jobs:
           container-registry-password: ${{ secrets.GITHUB_TOKEN }}
           image: ${{ matrix.image }}
           image-tags: |
-            ${{ github.event.release.tag_name }}
+            ${{ env.VERSION }}
             latest
           push: "true"
-          version: ${{ github.event.release.tag_name }}
+          version: ${{ env.VERSION }}
 
   manifest:
     name: Publish multi-arch manifest
     needs: [init, build]
     runs-on: ubuntu-latest
     permissions:
-      id-token: write # Write needed for Cosign signing (issue OIDC token for signing)
-      packages: write # To push the manifest to GitHub Container Registry
+      id-token: write
+      packages: write
     steps:
       - name: Publish multi-arch manifest
         uses: home-assistant/builder/actions/publish-multi-arch-manifest@4de35182ce1e329181bffcbcc84d33db5e2c7e10 # 2026.06.0
@@ -68,5 +75,5 @@ jobs:
           container-registry-password: ${{ secrets.GITHUB_TOKEN }}
           image-name: ${{ env.IMAGE_NAME }}
           image-tags: |
-            ${{ github.event.release.tag_name }}
+            ${{ env.VERSION }}
             latest
