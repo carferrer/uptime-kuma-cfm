@@ -1,3 +1,17 @@
+# Versión 2026.09.04 (2026-09-16)
+
+## What's Changed
+* ⬆️ Pin dependencies by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/24
+* ci: build add-on images on pull requests by @carferrer in https://github.com/carferrer/uptime-kuma-cfm/pull/26
+* ci: automate release preparation and publishing by @carferrer in https://github.com/carferrer/uptime-kuma-cfm/pull/28
+* ⬆️ Update ghcr.io/hassio-addons/base Docker tag to v21.0.5 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/25
+* ⬆️ Update louislam/uptime-kuma to v2.5.5 - autoclosed by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/27
+
+## New Contributors
+* @carferrer made their first contribution in https://github.com/carferrer/uptime-kuma-cfm/pull/26
+
+**Full Changelog**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.09.03...2026.09.04
+
 # Versión 2026.09.03 (2026-09-14)
 
 **Full Changelog**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.09.02...2026.09.03
