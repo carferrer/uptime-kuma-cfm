@@ -1,3 +1,14 @@
+# Versión 2026.10.01 (2026-10-08)
+
+## What's Changed
+* Update Python3 installation in Dockerfile by @carferrer in https://github.com/carferrer/uptime-kuma-cfm/pull/34
+* ⬆️ Update cloudflare/cloudflared to v2026.10.0 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/30
+* ⬆️ Update apprise to v2 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/31
+* ⬆️ Update ghcr.io/hassio-addons/base Docker tag to v21.0.8 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/32
+
+
+**Full Changelog**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.09.04...2026.10.01
+
 # Versión 2026.09.04 (2026-09-16)
 
 ## What's Changed
