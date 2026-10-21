@@ -12,9 +12,13 @@ COPY requirements.txt /opt/
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Setup base
-ARG UPTIME_KUMA_VERSION="2.5.5"
+ARG UPTIME_KUMA_VERSION="2.5.6"
 ARG CLOUDFLARED_VERSION="2026.10.3"
 ARG BUILD_ARCH=amd64
+# La imagen base fija musl a r2; musl-dev del repositorio requiere r3.
+# Reemplazar esa restricción antes de instalar las herramientas de compilación.
+RUN apk add --no-cache 'musl>=1.2.6-r3'
+
 # hadolint ignore=DL3003,DL3042
 RUN \
     apk add --no-cache --virtual .build-dependencies \
