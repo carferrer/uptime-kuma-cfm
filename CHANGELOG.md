@@ -1,3 +1,12 @@
+# Versión 2026.10.02 (2026-10-21)
+
+## What's Changed
+* ⬆️ Update cloudflare/cloudflared to v2026.10.3 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/37
+* ⬆️ Update louislam/uptime-kuma to v2.5.6 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/36
+
+
+**Full Changelog**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.10.01...2026.10.02
+
 # Versión 2026.10.01 (2026-10-08)
 
 ## What's Changed
