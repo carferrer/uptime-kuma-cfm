@@ -1,3 +1,13 @@
+# Versión 2026.10.03 (2026-10-23)
+
+## What's Changed
+* ⬆️ Update ghcr.io/hassio-addons/base Docker tag to v21.0.9 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/39
+* ⬆️ Update alpine_3_24/nodejs to v24.22.1-r0 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/41
+* ⬆️ Update louislam/uptime-kuma to v2.5.7 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/40
+
+
+**Full Changelog**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.10.02...2026.10.03
+
 # Versión 2026.10.02 (2026-10-21)
 
 ## What's Changed
