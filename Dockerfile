@@ -13,7 +13,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Setup base
 ARG UPTIME_KUMA_VERSION="2.5.7"
-ARG CLOUDFLARED_VERSION="2026.10.3"
+ARG CLOUDFLARED_VERSION="2026.10.4"
 ARG BUILD_ARCH=amd64
 # La imagen base fija musl a r2; musl-dev del repositorio requiere r3.
 # Reemplazar esa restricción antes de instalar las herramientas de compilación.
