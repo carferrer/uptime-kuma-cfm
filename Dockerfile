@@ -12,7 +12,7 @@ COPY requirements.txt /opt/
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Setup base
-ARG UPTIME_KUMA_VERSION="2.5.8"
+ARG UPTIME_KUMA_VERSION="2.5.9"
 ARG CLOUDFLARED_VERSION="2026.10.7"
 ARG BUILD_ARCH=amd64
 # La imagen base fija musl a r2; musl-dev del repositorio requiere r3.
