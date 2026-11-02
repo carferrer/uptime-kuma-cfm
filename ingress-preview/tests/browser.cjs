@@ -14,6 +14,10 @@ const prefix = "/api/hassio_ingress/Test_Upper-lower123";
         // Supervisor constructs ingress_url by appending the configured entry
         // to a prefix that ALREADY ends in "/". Preserve this exact behavior.
         const configuredPath = "/" + entry;
+        const rootResponse = await fetch("http://127.0.0.1:18099" + prefix + "/", { redirect: "manual" });
+        console.log("ROOT REDIRECT:", rootResponse.status, rootResponse.headers.get("location"));
+        assert.equal(rootResponse.status, 302);
+        assert.equal(rootResponse.headers.get("location"), prefix + "/dashboard");
         // Keep the empty-instance setup event from masking the invalid route.
         await page.route("**/socket.io/**", route => route.abort());
         await page.goto("http://127.0.0.1:18099" + prefix + "//dashboard");

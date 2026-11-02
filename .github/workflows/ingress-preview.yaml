@@ -42,7 +42,9 @@ jobs:
           NODE_PATH=/tmp/kuma-browser/node_modules node ingress-preview/tests/browser.cjs
       - name: Container logs
         if: always()
-        run: docker logs kuma-preview || true
+        run: |
+          docker logs kuma-preview || true
+          docker logs supervisor || true
       - name: Clean up
         if: always()
         run: |
