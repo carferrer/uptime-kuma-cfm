@@ -1,3 +1,18 @@
+# Versión 2026.11.02 (2026-11-02)
+
+## Ingress para la instalación existente
+
+- Añade acceso desde el panel de Home Assistant mediante Ingress, con las correcciones probadas en la preview 0.1.1.
+- Conserva el slug `uptime-kuma-cfm`, la carpeta `/data` y Uptime Kuma 2.5.9. Se reutilizan los datos del add-on original.
+- Mantiene la autenticación y OTP de Kuma; adapta rutas, recursos y WebSocket al prefijo de Ingress.
+- Incluye pruebas de navegador, restricciones de acceso y conservación de datos al actualizar desde 2026.11.01.
+
+## Cambio incompatible de acceso
+
+El puerto 3001 deja de publicarse. Usa **Abrir interfaz web** o la barra lateral de Home Assistant. Los iframes de la URL antigua, páginas públicas, llamadas externas a API/métricas/push y descubrimiento por URL directa dejan de estar disponibles. Se elimina el ejecutable de Cloudflare Tunnel. Esta edición está orientada al uso privado mediante Home Assistant.
+
+Haz una copia de seguridad antes de actualizar. No desinstales el add-on original. La preview local tiene datos separados y no se migra automáticamente.
+
 # Versión 2026.11.01 (2026-11-01)
 
 ## What's Changed
@@ -123,6 +138,3 @@
 Arreglo changelog action
 
 # Versión  (2026-08-08)
-
-
-

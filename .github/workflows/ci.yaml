@@ -13,6 +13,8 @@ on:
       - build.yaml
       - requirements.txt
       - rootfs/**
+      - adaptation/**
+      - config.yaml
       - .github/workflows/ci.yaml
   workflow_dispatch:
 

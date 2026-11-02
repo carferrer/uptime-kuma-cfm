@@ -1,73 +1,37 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/base:21.0.10
-# hadolint ignore=DL3006
 FROM ${BUILD_FROM}
-
-# Set workdir
 WORKDIR /opt
-
-# Copy Python requirements file
-COPY requirements.txt /opt/
-
-# Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-# Setup base
+# Keep this version aligned with the guarded source adaptations.
 ARG UPTIME_KUMA_VERSION="2.5.9"
-ARG CLOUDFLARED_VERSION="2026.10.7"
 ARG BUILD_ARCH=amd64
-# La imagen base fija musl a r2; musl-dev del repositorio requiere r3.
-# Reemplazar esa restricción antes de instalar las herramientas de compilación.
-RUN apk add --no-cache 'musl>=1.2.6-r3'
-
-# hadolint ignore=DL3003,DL3042
-RUN \
-    apk add --no-cache --virtual .build-dependencies \
-        build-base=0.5-r4 \
-        py3-pip=26.1.2-r0 \
-    \
-    && apk add --no-cache \
-        iputils=20250605-r2 \
-        nodejs=24.22.1-r1 \
-        npm=11.12.1-r0 \
-        python3=3.14.10-r1 \
-        setpriv=2.42.3-r1 \
-    \
-    && mkdir -p /opt/uptime-kuma \
-    && curl -L -s "https://github.com/louislam/uptime-kuma/archive/refs/tags/${UPTIME_KUMA_VERSION}.tar.gz" \
-        | tar zxvf - --strip-components 1 -C /opt/uptime-kuma \
-    \
+COPY requirements.txt /opt/
+COPY adaptation /opt/ingress-adaptation/
+RUN apk add --no-cache 'musl>=1.2.6-r3' \
+    && apk add --no-cache --virtual .build-dependencies build-base=0.5-r4 py3-pip=26.1.2-r0 \
+    && apk add --no-cache iputils=20250605-r2 nodejs=24.22.1-r1 npm=11.12.1-r0 python3=3.14.10-r1 setpriv=2.42.3-r1 nginx \
+    && mkdir -p /opt/uptime-kuma /run/nginx \
+    && curl --fail --location --silent --show-error "https://github.com/louislam/uptime-kuma/archive/refs/tags/${UPTIME_KUMA_VERSION}.tar.gz" \
+        | tar xz --strip-components=1 -C /opt/uptime-kuma \
     && cd /opt/uptime-kuma \
-    \
     && pip install -r /opt/requirements.txt \
-    \
-    && npm ci \
-        --no-audit \
-        --no-fund \
-        --no-update-notifier \
-        --omit=dev \
-    && npm run download-dist \
-    \
-    && if [ "${BUILD_ARCH}" = "aarch64" ]; then CLOUDFLARED_ARCH="arm64"; \
-    elif [ "${BUILD_ARCH}" = "amd64" ]; then CLOUDFLARED_ARCH="amd64"; fi \
-    && curl -L --fail -o /usr/bin/cloudflared \
-        "https://github.com/cloudflare/cloudflared/releases/download/${CLOUDFLARED_VERSION}/cloudflared-linux-${CLOUDFLARED_ARCH}" \
-    && chmod +x /usr/bin/cloudflared \
-    \
-    && npm cache clear --force \
-    \
-    && apk del --no-cache --purge .build-dependencies \
-    && rm -fr \
-        /tmp/* \
-        /root/.cache \
-        /root/.npm \
-        /root/.npmrc
-
-# Copy root filesystem
+    && node /opt/ingress-adaptation/apply.cjs /opt/uptime-kuma \
+    && npm ci --no-audit --no-fund --no-update-notifier \
+    && npm run build -- --base=./ \
+    && node /opt/ingress-adaptation/prepare-dist.cjs /opt/uptime-kuma/dist \
+    && npm prune --omit=dev --no-audit --no-fund \
+    && npm cache clean --force \
+    && apk del --no-cache --purge .build-dependencies
 COPY rootfs /
+RUN chmod +x /etc/s6-overlay/s6-rc.d/uptime-kuma/run \
+    /etc/s6-overlay/s6-rc.d/uptime-kuma/finish \
+    /etc/s6-overlay/s6-rc.d/nginx/run \
+    /etc/s6-overlay/s6-rc.d/nginx/finish \
+    && nginx -t
+# No cloudflared binary: access is exclusively through Home Assistant Ingress.
+# Kuma's own login/OTP and WebSocket origin checks remain enabled.
 
-RUN chmod +x /etc/s6-overlay/s6-rc.d/discovery/run
 
-# Build arguments
 ARG BUILD_DATE
 ARG BUILD_DESCRIPTION
 ARG BUILD_NAME
@@ -95,4 +59,3 @@ LABEL \
     org.opencontainers.image.created=${BUILD_DATE} \
     org.opencontainers.image.revision=${BUILD_REF} \
     org.opencontainers.image.version=${BUILD_VERSION}
-ENV UPTIME_KUMA_DISABLE_FRAME_SAMEORIGIN="1"
