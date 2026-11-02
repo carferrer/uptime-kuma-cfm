@@ -1,5 +1,9 @@
 const { chromium } = require("playwright");
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const config = fs.readFileSync(path.join(__dirname, "../config.yaml"), "utf8");
+const entry = config.match(/^ingress_entry:\s*(.+)$/m)?.[1] || "";
 const prefix = "/api/hassio_ingress/Test_Upper-lower123";
 (async () => {
     const browser = await chromium.launch({ headless: true });
@@ -7,7 +11,17 @@ const prefix = "/api/hassio_ingress/Test_Upper-lower123";
         const page = await browser.newPage();
         page.on("pageerror", error => console.log("BROWSER ERROR:", error.message));
         page.on("console", message => { if (message.type() === "error") console.log("CONSOLE:", message.text()); });
-        for (const path of ["/", "/dashboard"]) {
+        // Supervisor constructs ingress_url by appending the configured entry
+        // to a prefix that ALREADY ends in "/". Preserve this exact behavior.
+        const configuredPath = "/" + entry;
+        await page.goto("http://127.0.0.1:18099" + prefix + "//dashboard");
+        await page.waitForTimeout(2000);
+        const legacyRoute = await page.evaluate(() =>
+            document.querySelector("#app").__vue_app__.config.globalProperties.$router.currentRoute.value.fullPath);
+        console.log("Legacy leading-slash entry reproducer:", legacyRoute);
+        assert.equal(legacyRoute, "//dashboard");
+        assert.ok(/Page Not Found|Página No Encontrada/.test(await page.locator("body").innerText()));
+        for (const path of [...new Set([configuredPath, "/", "/dashboard"])]) {
             await page.goto("http://127.0.0.1:18099" + prefix + path);
             await page.waitForTimeout(3000);
             console.log("ROUTE DIAGNOSTIC:", JSON.stringify(await page.evaluate(() => {
