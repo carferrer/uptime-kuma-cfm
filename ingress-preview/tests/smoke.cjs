@@ -30,6 +30,26 @@ const headers = { "X-Ingress-Path": "/api/hassio_ingress/test_A-123", Host: "ha.
     assert.equal((await fetch(base + "/dashboard", { headers: { Host: "ha.example.test" } })).status, 400);
     assert.equal((await fetch(base + "/dashboard", { headers: { ...headers, "X-Ingress-Path": '//evil.test/"' } })).status, 400);
     await assert.rejects(fetch("http://" + target + ":3001", { signal: AbortSignal.timeout(3000) }));
+    const setup = await fetch(base + "/setup-database-info", { headers }).then(r => r.json());
+    if (setup.needSetup) {
+        const configured = await fetch(base + "/setup-database", {
+            method: "POST",
+            headers: { ...headers, "Content-Type": "application/json" },
+            body: JSON.stringify({ dbConfig: { type: "sqlite" } })
+        });
+        assert.equal(configured.status, 200);
+    }
+    let socketReady = false;
+    for (let n = 0; n < 30; n++) {
+        try {
+            const probe = await fetch(base + "/socket.io/?EIO=4&transport=polling", {
+                headers, signal: AbortSignal.timeout(2000)
+            });
+            if ((await probe.text()).startsWith("0{")) { socketReady = true; break; }
+        } catch {}
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    assert.ok(socketReady, "Main server did not start after SQLite setup");
     await new Promise((resolve, reject) => {
         const ws = new WebSocket("ws://" + target + ":8099/socket.io/?EIO=4&transport=websocket", {
             headers: { ...headers, Origin: "http://ha.example.test" }
