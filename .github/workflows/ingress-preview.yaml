@@ -20,7 +20,7 @@ jobs:
       - name: Start isolated preview
         run: |
           docker network create --subnet 172.30.32.0/24 ingress-test
-          docker run -d --name supervisor --network ingress-test --ip 172.30.32.2 \
+          docker run -d --name supervisor --network ingress-test --ip 172.30.32.2 -p 127.0.0.1:18099:8080 \
             -v "$PWD/ingress-preview/tests:/tests:ro" \
             --entrypoint node kuma-ingress-preview /tests/supervisor-stub.cjs
           docker run -d --name kuma-preview --network ingress-test --ip 172.30.32.3 \
@@ -34,6 +34,12 @@ jobs:
           docker run --rm --network ingress-test --ip 172.30.32.4 \
             -v "$PWD/ingress-preview/tests:/tests:ro" \
             --entrypoint node kuma-ingress-preview /tests/smoke.cjs denied
+      - name: Browser routing regression
+        timeout-minutes: 5
+        run: |
+          npm install --prefix /tmp/kuma-browser playwright@1.56.1
+          /tmp/kuma-browser/node_modules/.bin/playwright install --with-deps chromium
+          NODE_PATH=/tmp/kuma-browser/node_modules node ingress-preview/tests/browser.cjs
       - name: Container logs
         if: always()
         run: docker logs kuma-preview || true

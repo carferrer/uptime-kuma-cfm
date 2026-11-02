@@ -14,3 +14,5 @@ http.createServer((request, response) => {
         data: request.url === "/addons/self/options/config" ? {} : data
     }));
 }).listen(80, "0.0.0.0", () => console.log("Supervisor startup fixture ready"));
+
+require("./ingress-proxy.cjs");
