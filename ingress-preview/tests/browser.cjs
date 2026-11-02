@@ -14,6 +14,8 @@ const prefix = "/api/hassio_ingress/Test_Upper-lower123";
         // Supervisor constructs ingress_url by appending the configured entry
         // to a prefix that ALREADY ends in "/". Preserve this exact behavior.
         const configuredPath = "/" + entry;
+        // Keep the empty-instance setup event from masking the invalid route.
+        await page.route("**/socket.io/**", route => route.abort());
         await page.goto("http://127.0.0.1:18099" + prefix + "//dashboard");
         await page.waitForTimeout(2000);
         const legacyRoute = await page.evaluate(() =>
@@ -21,6 +23,7 @@ const prefix = "/api/hassio_ingress/Test_Upper-lower123";
         console.log("Legacy leading-slash entry reproducer:", legacyRoute);
         assert.equal(legacyRoute, "//dashboard");
         assert.ok(/Page Not Found|Página No Encontrada/.test(await page.locator("body").innerText()));
+        await page.unroute("**/socket.io/**");
         for (const path of [...new Set([configuredPath, "/", "/dashboard"])]) {
             await page.goto("http://127.0.0.1:18099" + prefix + path);
             await page.waitForTimeout(3000);
