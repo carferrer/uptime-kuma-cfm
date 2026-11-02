@@ -1,0 +1,41 @@
+name: Ingress preview
+on:
+  pull_request:
+    paths:
+      - "ingress-preview/**"
+      - ".github/workflows/ingress-preview.yaml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Test adaptation helpers
+        run: node --test ingress-preview/tests/adaptation.test.mjs
+      - name: Build preview (never publish)
+        run: docker build -t kuma-ingress-preview ingress-preview
+      - name: Start isolated preview
+        run: |
+          docker network create --subnet 172.30.32.0/24 ingress-test
+          docker run -d --name kuma-preview --network ingress-test --ip 172.30.32.3 kuma-ingress-preview
+      - name: Test Supervisor access and WebSocket
+        run: |
+          docker run --rm --network ingress-test --ip 172.30.32.2 \
+            -v "$PWD/ingress-preview/tests:/tests:ro" \
+            --entrypoint node kuma-ingress-preview /tests/smoke.cjs
+      - name: Test rejection of other clients
+        run: |
+          docker run --rm --network ingress-test --ip 172.30.32.4 \
+            -v "$PWD/ingress-preview/tests:/tests:ro" \
+            --entrypoint node kuma-ingress-preview /tests/smoke.cjs denied
+      - name: Container logs
+        if: always()
+        run: docker logs kuma-preview || true
+      - name: Clean up
+        if: always()
+        run: |
+          docker rm -f kuma-preview || true
+          docker network rm ingress-test || true

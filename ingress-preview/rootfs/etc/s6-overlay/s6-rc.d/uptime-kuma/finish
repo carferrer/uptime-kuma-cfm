@@ -1,0 +1,3 @@
+#!/command/with-contenv bashio
+# Stop the container if either the application or its ingress proxy exits.
+exec /run/s6/basedir/bin/halt

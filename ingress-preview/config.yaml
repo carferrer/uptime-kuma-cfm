@@ -1,0 +1,20 @@
+---
+name: Uptime Kuma Ingress Preview
+version: "0.1.0"
+slug: uptime-kuma-cfm-ingress-preview
+description: "Prueba independiente de Uptime Kuma mediante Ingress (con login y OTP)"
+url: https://github.com/carferrer/uptime-kuma-cfm
+init: false
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: manual
+ingress: true
+ingress_port: 8099
+ingress_entry: /dashboard
+panel_title: Kuma Ingress Preview
+panel_icon: mdi:heart-pulse
+panel_admin: true
+options: {}
+schema: {}
