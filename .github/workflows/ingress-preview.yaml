@@ -20,13 +20,15 @@ jobs:
       - name: Start isolated preview
         run: |
           docker network create --subnet 172.30.32.0/24 ingress-test
-          docker run -d --name kuma-preview --network ingress-test --ip 172.30.32.3 kuma-ingress-preview
+          docker run -d --name supervisor --network ingress-test --ip 172.30.32.2 \
+            -v "$PWD/ingress-preview/tests:/tests:ro" \
+            --entrypoint node kuma-ingress-preview /tests/supervisor-stub.cjs
+          docker run -d --name kuma-preview --network ingress-test --ip 172.30.32.3 \
+            -e SUPERVISOR_TOKEN=ci-fixture-only kuma-ingress-preview
       - name: Test Supervisor access and WebSocket
         timeout-minutes: 3
         run: |
-          docker run --rm --network ingress-test --ip 172.30.32.2 \
-            -v "$PWD/ingress-preview/tests:/tests:ro" \
-            --entrypoint node kuma-ingress-preview /tests/smoke.cjs
+          docker exec supervisor node /tests/smoke.cjs
       - name: Test rejection of other clients
         run: |
           docker run --rm --network ingress-test --ip 172.30.32.4 \
@@ -38,5 +40,5 @@ jobs:
       - name: Clean up
         if: always()
         run: |
-          docker rm -f kuma-preview || true
+          docker rm -f kuma-preview supervisor || true
           docker network rm ingress-test || true
