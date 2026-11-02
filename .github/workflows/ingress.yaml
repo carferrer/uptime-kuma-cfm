@@ -1,0 +1,82 @@
+name: Ingress and upgrade
+on:
+  pull_request:
+    paths:
+      - "Dockerfile"
+      - "config.yaml"
+      - "requirements.txt"
+      - "adaptation/**"
+      - "rootfs/**"
+      - "tests/**"
+      - ".github/workflows/ingress.yaml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Test adaptation helpers
+        run: node --test tests/adaptation.test.mjs
+      - name: Build test image (never publish)
+        run: docker build -t kuma-ingress-preview .
+      - name: Start isolated test instance
+        run: |
+          docker network create --subnet 172.30.32.0/24 ingress-test
+          docker run -d --name supervisor --network ingress-test --ip 172.30.32.2 -p 127.0.0.1:18099:8080 \
+            -v "$PWD/tests:/tests:ro" \
+            --entrypoint node kuma-ingress-preview /tests/supervisor-stub.cjs
+          docker run -d --name kuma-preview --network ingress-test --ip 172.30.32.3 \
+            -e SUPERVISOR_TOKEN=ci-fixture-only kuma-ingress-preview
+      - name: Test Supervisor access and WebSocket
+        timeout-minutes: 3
+        run: |
+          docker exec supervisor node /tests/smoke.cjs
+      - name: Test rejection of other clients
+        run: |
+          docker run --rm --network ingress-test --ip 172.30.32.4 \
+            -v "$PWD/tests:/tests:ro" \
+            --entrypoint node kuma-ingress-preview /tests/smoke.cjs denied
+      - name: Browser routing regression
+        timeout-minutes: 5
+        run: |
+          npm install --prefix /tmp/kuma-browser playwright@1.56.1
+          /tmp/kuma-browser/node_modules/.bin/playwright install --with-deps chromium
+          NODE_PATH=/tmp/kuma-browser/node_modules node tests/browser.cjs
+      - name: Upgrade existing SQLite installation
+        timeout-minutes: 8
+        run: |
+          docker rm -f kuma-preview
+          docker volume create kuma-upgrade-data
+          docker pull ghcr.io/carferrer/uptime-kuma-cfm:2026.11.01
+          docker run -d --name kuma-old --network ingress-test --ip 172.30.32.3 \
+            -e SUPERVISOR_TOKEN=ci-fixture-only -v kuma-upgrade-data:/data \
+            ghcr.io/carferrer/uptime-kuma-cfm:2026.11.01
+          docker exec supervisor node /tests/upgrade-client.cjs seed
+          docker stop -t 60 kuma-old
+          docker run --rm -v kuma-upgrade-data:/data -v "$PWD/tests:/tests:ro" \
+            --entrypoint node ghcr.io/carferrer/uptime-kuma-cfm:2026.11.01 /tests/upgrade-data.cjs seed
+          docker rm kuma-old
+          docker run -d --name kuma-preview --network ingress-test --ip 172.30.32.3 \
+            -e SUPERVISOR_TOKEN=ci-fixture-only -v kuma-upgrade-data:/data \
+            -v "$PWD/tests:/tests:ro" kuma-ingress-preview
+          docker exec supervisor node /tests/smoke.cjs
+          docker exec kuma-preview node /tests/upgrade-data.cjs verify
+          docker exec supervisor node /tests/upgrade-client.cjs verify
+          docker restart -t 60 kuma-preview
+          docker exec supervisor node /tests/smoke.cjs
+          docker exec kuma-preview node /tests/upgrade-data.cjs verify
+      - name: Container logs
+        if: always()
+        run: |
+          docker logs kuma-preview || true
+          docker logs supervisor || true
+          docker logs kuma-old || true
+      - name: Clean up
+        if: always()
+        run: |
+          docker rm -f kuma-preview kuma-old supervisor || true
+          docker network rm ingress-test || true
+          docker volume rm kuma-upgrade-data || true

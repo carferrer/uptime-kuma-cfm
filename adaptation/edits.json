@@ -1,0 +1,183 @@
+{
+  "version": "2.5.9",
+  "edits": [
+    {
+      "file": "src/router.js",
+      "before": "history: createWebHistory(),",
+      "after": "history: createWebHistory(ingressBase()),",
+      "count": 1
+    },
+    {
+      "file": "src/mixins/socket.js",
+      "before": "socket = io(url);",
+      "after": "socket = io(url, { path: ingressBase() + \"socket.io\" });",
+      "count": 1
+    },
+    {
+      "file": "src/mixins/socket.js",
+      "before": "location.pathname",
+      "after": "appPathname()",
+      "count": 3
+    },
+    {
+      "file": "src/mixins/public.js",
+      "before": "// change the axios base url for development",
+      "after": "axios.defaults.baseURL = ingressBase();\n\n// change the axios base url for development",
+      "count": 1
+    },
+    {
+      "file": "src/util-frontend.js",
+      "before": "    } else {\n        return \"\";\n    }\n}",
+      "after": "    } else {\n        return ingressPrefix();\n    }\n}",
+      "count": 1
+    },
+    {
+      "file": "src/main.js",
+      "before": "if (\"serviceWorker\" in navigator) {",
+      "after": "if (!ingressPrefix() && \"serviceWorker\" in navigator) {",
+      "count": 1
+    },
+    {
+      "file": "src/pages/AddStatusPage.vue",
+      "before": "location.href = \"/status/\" + res.slug + \"?edit\";",
+      "after": "location.href = ingressURL(\"/status/\" + res.slug + \"?edit\");",
+      "count": 1
+    },
+    {
+      "file": "src/pages/SetupDatabase.vue",
+      "before": "location.href = \"/setup\";",
+      "after": "location.href = ingressURL(\"/setup\");",
+      "count": 2
+    },
+    {
+      "file": "src/pages/StatusPage.vue",
+      "before": "location.href = \"/page-not-found\";",
+      "after": "location.href = ingressURL(\"/page-not-found\");",
+      "count": 1
+    },
+    {
+      "file": "src/pages/StatusPage.vue",
+      "before": "location.href = \"/status/\" + this.config.slug;",
+      "after": "location.href = ingressURL(\"/status/\" + this.config.slug);",
+      "count": 1
+    },
+    {
+      "file": "src/pages/StatusPage.vue",
+      "before": "location.href = \"/manage-status-page\";",
+      "after": "location.href = ingressURL(\"/manage-status-page\");",
+      "count": 1
+    },
+    {
+      "file": "src/pages/StatusPage.vue",
+      "before": "location.href = \"/status/\" + this.slug;",
+      "after": "location.href = ingressURL(\"/status/\" + this.slug);",
+      "count": 1
+    },
+    {
+      "file": "src/pages/ManageStatusPage.vue",
+      "before": ":href=\"'/status/' + statusPage.slug\"",
+      "after": ":href=\"$router.resolve('/status/' + statusPage.slug).href\"",
+      "count": 1
+    },
+    {
+      "file": "src/pages/StatusPage.vue",
+      "before": "href=\"/manage-status-page\"",
+      "after": "href=\"manage-status-page\"",
+      "count": 1
+    },
+    {
+      "file": "src/pages/NotFound.vue",
+      "before": "href=\"/\"",
+      "after": "href=\"./\"",
+      "count": 1
+    },
+    {
+      "file": "src/layouts/Layout.vue",
+      "before": "data=\"/icon.svg\"",
+      "after": "data=\"icon.svg\"",
+      "count": 2
+    },
+    {
+      "file": "src/components/settings/About.vue",
+      "before": "data=\"/icon.svg\"",
+      "after": "data=\"icon.svg\"",
+      "count": 1
+    },
+    {
+      "file": "src/pages/NotFound.vue",
+      "before": "data=\"/icon.svg\"",
+      "after": "data=\"icon.svg\"",
+      "count": 2
+    },
+    {
+      "file": "src/pages/Setup.vue",
+      "before": "data=\"/icon.svg\"",
+      "after": "data=\"icon.svg\"",
+      "count": 1
+    },
+    {
+      "file": "src/pages/SetupDatabase.vue",
+      "before": "data=\"/icon.svg\"",
+      "after": "data=\"icon.svg\"",
+      "count": 1
+    },
+    {
+      "file": "src/components/BadgeLinkGeneratorDialog.vue",
+      "before": "new URL(this.$root.baseURL).origin + \"/api/badge/\"",
+      "after": "new URL(document.baseURI).href.replace(/\\/$/, \"\") + \"/api/badge/\"",
+      "count": 1
+    },
+    {
+      "file": "src/components/settings/Docker.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 1
+    },
+    {
+      "file": "src/components/settings/Notifications.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 1
+    },
+    {
+      "file": "src/components/settings/Proxies.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 2
+    },
+    {
+      "file": "src/components/settings/RemoteBrowsers.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 1
+    },
+    {
+      "file": "src/pages/Details.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 1
+    },
+    {
+      "file": "src/pages/EditMonitor.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 2
+    },
+    {
+      "file": "src/pages/NotFound.vue",
+      "before": "@click=\"goBack()\"",
+      "after": "@click.prevent=\"goBack()\"",
+      "count": 1
+    }
+  ],
+  "imports": {
+    "src/router.js": "import { ingressBase } from \"./ingress\";",
+    "src/mixins/socket.js": "import { ingressBase, appPathname } from \"../ingress\";",
+    "src/mixins/public.js": "import { ingressBase } from \"../ingress\";",
+    "src/util-frontend.js": "import { ingressPrefix } from \"./ingress\";",
+    "src/main.js": "import { ingressPrefix } from \"./ingress\";",
+    "src/pages/AddStatusPage.vue": "import { ingressURL } from \"../ingress\";",
+    "src/pages/SetupDatabase.vue": "import { ingressURL } from \"../ingress\";",
+    "src/pages/StatusPage.vue": "import { ingressURL } from \"../ingress\";"
+  }
+}

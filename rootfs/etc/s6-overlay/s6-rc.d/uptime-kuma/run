@@ -1,13 +1,3 @@
 #!/command/with-contenv bashio
-# shellcheck shell=bash
-# ==============================================================================
-# Home Assistant Community App: Uptime Kuma
-# Starts Uptime Kuma
-# ==============================================================================
-export NODE_PATH=/opt/node_modules
-
-cd /opt/uptime-kuma || bashio::exit.nok "Could not change directory to Uptime Kuma"
-
-bashio::log.info "Starting Uptime Kuma..."
-
-exec node server/server.js --data-dir="/data/"
+cd /opt/uptime-kuma || exit 1
+exec node server/server.js --host=127.0.0.1 --port=3001 --data-dir=/data/

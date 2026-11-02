@@ -1,18 +1,19 @@
 ---
 name: Uptime Kuma
-version: 2026.11.01
+version: "2026.11.02"
 slug: uptime-kuma-cfm
-description: Sistema autoalojado de Kuma que permite la ejecucion dentro de un iframe "Uptime Robot"
+description: Monitorización privada mediante Home Assistant Ingress
 url: https://github.com/carferrer/uptime-kuma-cfm
 image: "ghcr.io/carferrer/uptime-kuma-cfm"
-image_tag: "latest"
 init: false
-arch: 
+arch:
   - amd64
   - aarch64
-ports:
-  3001/tcp: 3001
-ports_description:
-  3001/tcp: Web interface
-discovery:
-  - uptime_kuma
+ingress: true
+ingress_port: 8099
+panel_title: Uptime Kuma
+panel_icon: mdi:heart-pulse
+panel_admin: true
+breaking_versions:
+  - "2026.11.02"
+backup: cold
