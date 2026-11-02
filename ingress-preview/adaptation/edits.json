@@ -126,6 +126,48 @@
       "before": "new URL(this.$root.baseURL).origin + \"/api/badge/\"",
       "after": "new URL(document.baseURI).href.replace(/\\/$/, \"\") + \"/api/badge/\"",
       "count": 1
+    },
+    {
+      "file": "src/components/settings/Docker.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 1
+    },
+    {
+      "file": "src/components/settings/Notifications.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 1
+    },
+    {
+      "file": "src/components/settings/Proxies.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 2
+    },
+    {
+      "file": "src/components/settings/RemoteBrowsers.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 1
+    },
+    {
+      "file": "src/pages/Details.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 1
+    },
+    {
+      "file": "src/pages/EditMonitor.vue",
+      "before": "href=\"#\" @click=",
+      "after": "href=\"#\" @click.prevent=",
+      "count": 2
+    },
+    {
+      "file": "src/pages/NotFound.vue",
+      "before": "@click=\"goBack()\"",
+      "after": "@click.prevent=\"goBack()\"",
+      "count": 1
     }
   ],
   "imports": {
