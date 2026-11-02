@@ -12,9 +12,9 @@ const headers = { "X-Ingress-Path": "/api/hassio_ingress/test_A-123", Host: "ha.
         return;
     }
     let response;
-    for (let n = 0; n < 90; n++) {
+    for (let n = 0; n < 30; n++) {
         try {
-            response = await fetch(base + "/dashboard", { headers, redirect: "manual" });
+            response = await fetch(base + "/dashboard", { headers, redirect: "manual", signal: AbortSignal.timeout(2000) });
             if (response.status === 200) break;
         } catch {}
         await new Promise(resolve => setTimeout(resolve, 1000));
