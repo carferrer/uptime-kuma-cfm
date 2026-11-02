@@ -45,7 +45,8 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
                 name: "Preserved upgrade monitor", type: "http", url: "http://supervisor/health",
                 active: false, interval: 60, retryInterval: 60, maxretries: 0,
                 accepted_statuscodes: ["200-299"], notificationIDList: {},
-                maxredirects: 10, method: "GET"
+                maxredirects: 10, method: "GET", conditions: [],
+                kafkaProducerBrokers: [], kafkaProducerSaslOptions: {}, rabbitmqNodes: []
             });
             assert.equal(result.ok, true, JSON.stringify(result));
             assert.equal(result.monitorID, 1);
@@ -64,3 +65,4 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
         }
     } finally { socket.disconnect(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });
+
