@@ -54,6 +54,8 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
             console.log("Original 2026.11.01 created a real user and monitor");
         } else {
             assert.equal(login.tokenRequired, true, "OTP must still be required after upgrade");
+            // Each path must use a fresh OTP: Kuma rejects reuse of a valid code.
+            await sleep(30000 - (Date.now() % 30000) + 1100);
             const result = await emit("login", {
                 username: "upgrade-fixture", password,
                 token: notp.totp.gen("ci-upgrade-fixture-secret")
