@@ -3,8 +3,9 @@ const assert = require("node:assert/strict");
 const { io } = require("/opt/uptime-kuma/node_modules/socket.io-client");
 const notp = require("/opt/uptime-kuma/node_modules/notp");
 const seed = process.argv[2] === "seed";
-const base = "http://172.30.32.3:" + (seed ? "3001" : "8099");
-const headers = seed ? {} : { "X-Ingress-Path": "/api/hassio_ingress/Upgrade_123", Host: "ha.example.test", Origin: "http://ha.example.test" };
+const direct = process.argv[2] === "direct";
+const base = "http://172.30.32.3:" + (seed || direct ? "3001" : "8099");
+const headers = seed || direct ? {} : { "X-Ingress-Path": "/api/hassio_ingress/Upgrade_123", Host: "ha.example.test", Origin: "http://ha.example.test" };
 const password = "CI-fixture-Passphrase-792!";
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -53,6 +54,8 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
             console.log("Original 2026.11.01 created a real user and monitor");
         } else {
             assert.equal(login.tokenRequired, true, "OTP must still be required after upgrade");
+            // Each path must use a fresh OTP: Kuma rejects reuse of a valid code.
+            await sleep(30000 - (Date.now() % 30000) + 1100);
             const result = await emit("login", {
                 username: "upgrade-fixture", password,
                 token: notp.totp.gen("ci-upgrade-fixture-secret")
@@ -61,7 +64,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
             const monitor = await emit("getMonitor", 1);
             assert.equal(monitor.ok, true, JSON.stringify(monitor));
             assert.equal(monitor.monitor.name, "Preserved upgrade monitor");
-            console.log("Existing password, OTP and monitor work through Ingress after upgrade");
+            console.log("Existing password, OTP and monitor work through the selected access path after upgrade");
         }
     } finally { socket.disconnect(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

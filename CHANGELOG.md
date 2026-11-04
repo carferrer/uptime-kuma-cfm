@@ -1,3 +1,11 @@
+# Versión 2026.11.03 (2026-11-04)
+
+- Recupera el puerto HTTP/Socket.IO 3001 para la integración de Kuma, configurable desde Configuración → Red.
+- Conserva Ingress en 8099 y el acceso desde el panel de Home Assistant.
+- Separa el backend privado en 127.0.0.1:3002 y adapta las rutas también para el acceso directo.
+- Mantiene usuarios, monitores, historial y OTP. El acceso directo no pasa por la autenticación de HA.
+- Añade pruebas del puerto directo, remapeo al host y autenticación tras actualizar.
+
 # Versión 2026.11.02 (2026-11-02)
 
 ## Ingress para la instalación existente

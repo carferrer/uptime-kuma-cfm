@@ -29,7 +29,7 @@ const headers = { "X-Ingress-Path": "/api/hassio_ingress/test_A-123", Host: "ha.
     assert.equal((await fetch(base + "/" + asset[1], { headers })).status, 200);
     assert.equal((await fetch(base + "/dashboard", { headers: { Host: "ha.example.test" } })).status, 400);
     assert.equal((await fetch(base + "/dashboard", { headers: { ...headers, "X-Ingress-Path": '//evil.test/"' } })).status, 400);
-    await assert.rejects(fetch("http://" + target + ":3001", { signal: AbortSignal.timeout(3000) }));
+    await assert.rejects(fetch("http://" + target + ":3002", { signal: AbortSignal.timeout(3000) }));
     const setup = await fetch(base + "/setup-database-info", { headers }).then(r => r.json());
     if (setup.needSetup) {
         const configured = await fetch(base + "/setup-database", {

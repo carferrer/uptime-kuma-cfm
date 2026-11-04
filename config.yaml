@@ -1,6 +1,6 @@
 ---
 name: Uptime Kuma
-version: "2026.11.02"
+version: "2026.11.03"
 slug: uptime-kuma-cfm
 description: Monitorización privada mediante Home Assistant Ingress
 url: https://github.com/carferrer/uptime-kuma-cfm
@@ -17,3 +17,7 @@ panel_admin: true
 breaking_versions:
   - "2026.11.02"
 backup: cold
+ports:
+  3001/tcp: 3001
+ports_description:
+  3001/tcp: "HTTP y Socket.IO de Kuma para integraciones (sin autenticación de HA)"
