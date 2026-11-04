@@ -29,11 +29,15 @@ jobs:
             -v "$PWD/tests:/tests:ro" \
             --entrypoint node kuma-ingress-preview /tests/supervisor-stub.cjs
           docker run -d --name kuma-preview --network ingress-test --ip 172.30.32.3 \
-            -e SUPERVISOR_TOKEN=ci-fixture-only kuma-ingress-preview
+            -p 127.0.0.1:13001:3001 -e SUPERVISOR_TOKEN=ci-fixture-only kuma-ingress-preview
       - name: Test Supervisor access and WebSocket
         timeout-minutes: 3
         run: |
           docker exec supervisor node /tests/smoke.cjs
+      - name: Test direct access and configurable host port
+        run: |
+          docker exec supervisor node /tests/direct.cjs
+          curl --fail http://127.0.0.1:13001/dashboard
       - name: Test rejection of other clients
         run: |
           docker run --rm --network ingress-test --ip 172.30.32.4 \
@@ -65,6 +69,7 @@ jobs:
           docker exec supervisor node /tests/smoke.cjs
           docker exec kuma-preview node /tests/upgrade-data.cjs verify
           docker exec supervisor node /tests/upgrade-client.cjs verify
+          docker exec supervisor node /tests/upgrade-client.cjs direct
           docker restart -t 60 kuma-preview
           docker exec supervisor node /tests/smoke.cjs
           docker exec kuma-preview node /tests/upgrade-data.cjs verify

@@ -3,8 +3,9 @@ const assert = require("node:assert/strict");
 const { io } = require("/opt/uptime-kuma/node_modules/socket.io-client");
 const notp = require("/opt/uptime-kuma/node_modules/notp");
 const seed = process.argv[2] === "seed";
-const base = "http://172.30.32.3:" + (seed ? "3001" : "8099");
-const headers = seed ? {} : { "X-Ingress-Path": "/api/hassio_ingress/Upgrade_123", Host: "ha.example.test", Origin: "http://ha.example.test" };
+const direct = process.argv[2] === "direct";
+const base = "http://172.30.32.3:" + (seed || direct ? "3001" : "8099");
+const headers = seed || direct ? {} : { "X-Ingress-Path": "/api/hassio_ingress/Upgrade_123", Host: "ha.example.test", Origin: "http://ha.example.test" };
 const password = "CI-fixture-Passphrase-792!";
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -61,7 +62,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
             const monitor = await emit("getMonitor", 1);
             assert.equal(monitor.ok, true, JSON.stringify(monitor));
             assert.equal(monitor.monitor.name, "Preserved upgrade monitor");
-            console.log("Existing password, OTP and monitor work through Ingress after upgrade");
+            console.log("Existing password, OTP and monitor work through the selected access path after upgrade");
         }
     } finally { socket.disconnect(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });
