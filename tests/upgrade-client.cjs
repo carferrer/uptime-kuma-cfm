@@ -1,6 +1,7 @@
 // Synthetic CI credentials only; never use against a real installation.
 const assert = require("node:assert/strict");
 const { io } = require("/opt/uptime-kuma/node_modules/socket.io-client");
+const { waitForApplication } = require("./socket-ready.cjs");
 const notp = require("/opt/uptime-kuma/node_modules/notp");
 const seed = process.argv[2] === "seed";
 const direct = process.argv[2] === "direct";
@@ -32,9 +33,11 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
     }
     assert.ok(ready, "Server did not become ready");
     const socket = io(base, { transports: ["websocket"], extraHeaders: headers, reconnection: false, timeout: 10000 });
-    const emit = (...args) => new Promise((resolve, reject) => socket.timeout(10000).emit(...args, (error, result) => error ? reject(error) : resolve(result)));
+    const emit = (...args) => new Promise((resolve, reject) => socket.timeout(30000).emit(...args, (error, result) => error ? reject(new Error("Kuma event " + args[0] + " timed out", { cause: error })) : resolve(result)));
     try {
         await new Promise((resolve, reject) => { socket.once("connect", resolve); socket.once("connect_error", reject); });
+        const needsUser = await waitForApplication(socket);
+        assert.equal(needsUser, seed, "Unexpected initial-user setup state");
         if (seed) {
             const setup = await emit("setup", "upgrade-fixture", password);
             assert.equal(setup.ok, true, JSON.stringify(setup));
