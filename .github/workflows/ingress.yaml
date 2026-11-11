@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Test adaptation helpers
-        run: node --test tests/adaptation.test.mjs
+        run: node --test tests/adaptation.test.mjs tests/socket-ready.test.cjs
       - name: Build test image (never publish)
         run: docker build -t kuma-ingress-preview .
       - name: Start isolated test instance
