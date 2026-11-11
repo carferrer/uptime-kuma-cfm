@@ -14,12 +14,12 @@ permissions:
   contents: read
 jobs:
   preview:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Test adaptation helpers
-        run: node --test tests/adaptation.test.mjs
+        run: node --test tests/adaptation.test.mjs tests/socket-ready.test.cjs
       - name: Build test image (never publish)
         run: docker build -t kuma-ingress-preview .
       - name: Start isolated test instance
@@ -46,7 +46,7 @@ jobs:
       - name: Browser routing regression
         timeout-minutes: 5
         run: |
-          npm install --prefix /tmp/kuma-browser playwright@1.56.1
+          npm install --prefix /tmp/kuma-browser playwright@1.65.0
           /tmp/kuma-browser/node_modules/.bin/playwright install --with-deps chromium
           NODE_PATH=/tmp/kuma-browser/node_modules node tests/browser.cjs
       - name: Upgrade existing SQLite installation
