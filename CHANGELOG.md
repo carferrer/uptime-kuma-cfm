@@ -1,3 +1,14 @@
+# Versión 2026.11.04 (2026-11-11)
+
+## What's Changed
+* ⬆️ Update paho-mqtt to v2.2.0 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/58
+* ⬆️ Update ghcr.io/hassio-addons/base Docker tag to v21.0.11 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/60
+* ⬆️ Update ubuntu to v26 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/56
+* ⬆️ Update apprise to v2.2.0 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/59
+
+
+**Full Changelog**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.11.03...2026.11.04
+
 # Versión 2026.11.03 (2026-11-04)
 
 - Recupera el puerto HTTP/Socket.IO 3001 para la integración de Kuma, configurable desde Configuración → Red.
