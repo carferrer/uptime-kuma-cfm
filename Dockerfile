@@ -3,7 +3,7 @@ FROM ${BUILD_FROM}
 WORKDIR /opt
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Keep this version aligned with the guarded source adaptations.
-ARG UPTIME_KUMA_VERSION="2.5.9"
+ARG UPTIME_KUMA_VERSION="2.5.11"
 ARG BUILD_ARCH=amd64
 COPY requirements.txt /opt/
 COPY adaptation /opt/ingress-adaptation/
