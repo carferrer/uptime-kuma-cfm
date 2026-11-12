@@ -1,3 +1,11 @@
+# Versión 2026.11.05 (2026-11-12)
+
+## What's Changed
+* ⬆️ Update louislam/uptime-kuma to v2.5.11 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/62
+
+
+**Full Changelog**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.11.04...2026.11.05
+
 # Versión 2026.11.04 (2026-11-11)
 
 ## What's Changed
