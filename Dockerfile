@@ -3,13 +3,13 @@ FROM ${BUILD_FROM}
 WORKDIR /opt
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Keep this version aligned with the guarded source adaptations.
-ARG UPTIME_KUMA_VERSION="2.5.9"
+ARG UPTIME_KUMA_VERSION="2.5.11"
 ARG BUILD_ARCH=amd64
 COPY requirements.txt /opt/
 COPY adaptation /opt/ingress-adaptation/
 RUN apk add --no-cache 'musl>=1.2.6-r3' \
     && apk add --no-cache --virtual .build-dependencies build-base=0.5-r4 py3-pip=26.1.2-r0 \
-    && apk add --no-cache iputils=20250605-r2 nodejs=24.22.1-r1 npm=11.12.1-r0 python3=3.14.10-r1 setpriv=2.42.3-r1 nginx \
+    && apk add --no-cache iputils=20250605-r2 nodejs=24.22.3-r0 npm=11.12.1-r0 python3=3.14.10-r1 setpriv=2.42.3-r1 nginx \
     && mkdir -p /opt/uptime-kuma /run/nginx \
     && curl --fail --location --silent --show-error "https://github.com/louislam/uptime-kuma/archive/refs/tags/${UPTIME_KUMA_VERSION}.tar.gz" \
         | tar xz --strip-components=1 -C /opt/uptime-kuma \
