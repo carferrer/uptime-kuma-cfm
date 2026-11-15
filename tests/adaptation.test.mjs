@@ -66,6 +66,9 @@ test("adaptation applies to upstream and fails closed if run twice", { skip: !pr
     assert.ok(main.includes('!ingressPrefix() && "serviceWorker"'));
     const router = readFileSync(path.join(dir, "src/router.js"), "utf8");
     assert.ok(router.includes("createWebHistory(ingressBase())"));
+    const editMonitor = readFileSync(path.join(dir, "src/pages/EditMonitor.vue"), "utf8");
+    assert.ok(editMonitor.includes('<option value="sip-options">'));
+    assert.ok(!editMonitor.includes('<option v-if="!$root.info.isContainer" value="sip-options">'));
     const second = spawnSync(process.execPath, [path.join(root, "adaptation/apply.cjs"), dir]);
     assert.notEqual(second.status, 0);
 });

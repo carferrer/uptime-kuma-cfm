@@ -38,6 +38,10 @@ jobs:
         run: |
           docker exec supervisor node /tests/direct.cjs
           curl --fail http://127.0.0.1:13001/dashboard
+      - name: Test SIP OPTIONS over UDP
+        run: |
+          docker run --rm --network ingress-test -v "$PWD/tests:/tests:ro" \
+            --entrypoint node kuma-ingress-preview /tests/sip-options.cjs
       - name: Test rejection of other clients
         run: |
           docker run --rm --network ingress-test --ip 172.30.32.4 \
