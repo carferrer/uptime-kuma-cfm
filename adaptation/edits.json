@@ -2,6 +2,12 @@
   "version": "2.5.11",
   "edits": [
     {
+      "file": "src/pages/EditMonitor.vue",
+      "before": "<option v-if=\"!$root.info.isContainer\" value=\"sip-options\">",
+      "after": "<option value=\"sip-options\">",
+      "count": 1
+    },
+    {
       "file": "src/router.js",
       "before": "history: createWebHistory(),",
       "after": "history: createWebHistory(ingressBase()),",

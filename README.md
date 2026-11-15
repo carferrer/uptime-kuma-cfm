@@ -1,6 +1,12 @@
 # Uptime Kuma para Home Assistant
 
-Uptime Kuma 2.5.9 con acceso mediante **Ingress** y un puerto directo configurable para integraciones.
+Uptime Kuma 2.5.11 con acceso mediante **Ingress** y un puerto directo configurable para integraciones.
+
+## Monitorizar SIP por UDP
+
+Para un servidor SIP que responde a OPTIONS en UDP, crea un monitor de tipo **SIP Options Ping**, introduce la IP o nombre del servidor y el puerto **5060**. El add-on incluye `sipsak` para enviar la petición desde el contenedor de Home Assistant. Kuma marca el monitor como disponible cuando recibe `200 OK`; un rechazo SIP, un timeout o un bloqueo de red lo marcarán como caído. El servidor debe poder responder al add-on desde la red de Home Assistant.
+
+El monitor **Puerto** comprueba TCP y no sirve para verificar 5060/UDP. Si el servidor SIP requiere autenticación o responde con otro código, este monitor no bastará para indicar que está activo.
 
 ## Configurar el puerto de la integración
 
