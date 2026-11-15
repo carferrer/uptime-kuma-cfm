@@ -1,3 +1,12 @@
+# Versión 2026.11.06 (2026-11-16)
+
+- Habilita el monitor SIP Options en el add-on y añade sipsak para comprobar SIP por UDP, incluido el puerto 5060.
+- Kuma considera disponible el servidor cuando responde 200 OK a SIP OPTIONS.
+- Mantiene Ingress, el puerto configurable 3001 y los monitores existentes.
+- Añade una prueba real de SIP OPTIONS sobre UDP y documentación de uso.
+
+**Cambios completos**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.11.05...2026.11.06
+
 # Versión 2026.11.05 (2026-11-12)
 
 ## What's Changed
