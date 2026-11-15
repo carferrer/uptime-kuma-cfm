@@ -8,6 +8,12 @@
       "count": 1
     },
     {
+      "file": "src/pages/EditMonitor.vue",
+      "before": "<div v-if=\"monitor.type === 'sip-options'\" class=\"alert alert-warning\" role=\"alert\">",
+      "after": "<div v-if=\"monitor.type === 'sip-options' && !$root.info.isContainer\" class=\"alert alert-warning\" role=\"alert\">",
+      "count": 1
+    },
+    {
       "file": "src/router.js",
       "before": "history: createWebHistory(),",
       "after": "history: createWebHistory(ingressBase()),",
