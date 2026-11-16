@@ -1,3 +1,12 @@
+# Versión 2026.11.07 (2026-11-16)
+
+- El monitor SIP Options indica «responde» ante cualquier respuesta SIP final válida (2xx–6xx), como 200, 401 o 403; muestra el código recibido.
+- Si no llega una respuesta SIP válida, informa de un error más claro para investigar timeout, firewall o servicio.
+- Elimina el aviso de que sipsak no funciona en Docker, ya que el add-on lo incluye.
+- Conserva los monitores existentes; Ingress y el puerto 3001 no cambian.
+
+**Cambios completos**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.11.06...2026.11.07
+
 # Versión 2026.11.06 (2026-11-16)
 
 - Habilita el monitor SIP Options en el add-on y añade sipsak para comprobar SIP por UDP, incluido el puerto 5060.
