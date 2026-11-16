@@ -32,4 +32,5 @@ for (const [file, content] of pending) {
     fs.writeFileSync(path.join(root, file), content);
 }
 fs.copyFileSync(path.join(__dirname, "ingress.js"), path.join(root, "src/ingress.js"));
+fs.copyFileSync(path.join(__dirname, "sip-options-probe.cjs"), path.join(root, "server/monitor-types/sip-options-probe.cjs"));
 console.log("Adapted " + pending.size + " source files for Kuma " + spec.version);
