@@ -9,8 +9,8 @@
     },
     {
       "file": "src/pages/EditMonitor.vue",
-      "before": "<div v-if=\"monitor.type === 'sip-options'\" class=\"alert alert-warning\" role=\"alert\">",
-      "after": "<div v-if=\"monitor.type === 'sip-options' && !$root.info.isContainer\" class=\"alert alert-warning\" role=\"alert\">",
+      "before": "<div v-if=\"monitor.type === 'sip-options'\" class=\"alert alert-warning\" role=\"alert\">\n                                {{ $t(\"sipsakPingWarning\") }}\n                            </div>",
+      "after": "",
       "count": 1
     },
     {

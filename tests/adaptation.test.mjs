@@ -69,7 +69,7 @@ test("adaptation applies to upstream and fails closed if run twice", { skip: !pr
     const editMonitor = readFileSync(path.join(dir, "src/pages/EditMonitor.vue"), "utf8");
     assert.ok(editMonitor.includes('<option value="sip-options">'));
     assert.ok(!editMonitor.includes('<option v-if="!$root.info.isContainer" value="sip-options">'));
-    assert.ok(editMonitor.includes('<div v-if="monitor.type === \'sip-options\' && !$root.info.isContainer" class="alert alert-warning"'));
+    assert.ok(!editMonitor.includes("sipsakPingWarning"));
     const second = spawnSync(process.execPath, [path.join(root, "adaptation/apply.cjs"), dir]);
     assert.notEqual(second.status, 0);
 });
