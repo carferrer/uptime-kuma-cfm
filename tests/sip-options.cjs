@@ -6,6 +6,7 @@ const { SIPMonitorType } = require("/opt/uptime-kuma/server/monitor-types/sip-op
 (async () => {
     const server = dgram.createSocket("udp4");
     let received = false;
+    let status = "200 OK";
     server.on("message", (packet, peer) => {
         const request = packet.toString("utf8");
         if (!request.startsWith("OPTIONS ")) return;
@@ -13,7 +14,7 @@ const { SIPMonitorType } = require("/opt/uptime-kuma/server/monitor-types/sip-op
         const header = name => request.split("\r\n").find(line => line.toLowerCase().startsWith(name.toLowerCase() + ":"));
         const to = header("To");
         const reply = [
-            "SIP/2.0 200 OK",
+            "SIP/2.0 " + status,
             header("Via"),
             header("From"),
             to && to.includes(";tag=") ? to : to + ";tag=kuma-test",
@@ -28,13 +29,17 @@ const { SIPMonitorType } = require("/opt/uptime-kuma/server/monitor-types/sip-op
     try {
         server.bind(0, "127.0.0.1");
         await once(server, "listening");
-        const heartbeat = {};
-        await new SIPMonitorType().check({
-            hostname: "127.0.0.1", port: server.address().port,
-        }, heartbeat, {});
-        assert.equal(received, true, "SIP OPTIONS was not sent over UDP");
-        assert.equal(heartbeat.status, 1, "SIP 200 OK did not mark the monitor UP");
-        console.log("SIP OPTIONS over UDP: UP");
+        for (status of ["200 OK", "403 Forbidden"]) {
+            received = false;
+            const heartbeat = {};
+            await new SIPMonitorType().check({
+                hostname: "127.0.0.1", port: server.address().port,
+            }, heartbeat, {});
+            assert.equal(received, true, "SIP OPTIONS was not sent over UDP");
+            assert.equal(heartbeat.status, 1, "SIP " + status + " did not mark the monitor UP");
+            assert.equal(heartbeat.msg, "SIP/2.0 " + status);
+        }
+        console.log("SIP OPTIONS over UDP: 200 and 403 replies marked UP");
     } finally {
         server.close();
     }
