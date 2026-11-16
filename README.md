@@ -4,7 +4,9 @@ Uptime Kuma 2.5.11 con acceso mediante **Ingress** y un puerto directo configura
 
 ## Monitorizar SIP por UDP
 
-Para un servidor SIP que responde a OPTIONS en UDP, crea un monitor de tipo **SIP Options Ping**, introduce la IP o nombre del servidor y el puerto **5060**. El add-on incluye `sipsak` para enviar la petición desde el contenedor de Home Assistant. Como esta comprobación solo pregunta si el servidor responde, cualquier respuesta SIP final válida (2xx–6xx, incluidos 401 o 403) marca el monitor como disponible y muestra el código recibido. Una ausencia de respuesta o un error de red lo marcarán como caído. El servidor debe poder responder al add-on desde la red de Home Assistant.
+Crea un monitor **SIP Options Ping** con el nombre o IP del servidor y su puerto UDP (habitualmente **5060**). En **Usuario PJSIP (From)** indica un endpoint PJSIP que exista en FreePBX, por ejemplo una extensión dedicada de monitorización. No introduzcas una contraseña ni el usuario de la interfaz web. Antes de reactivar un monitor creado con una versión anterior, edítalo y completa este campo.
+
+El add-on envía **un solo OPTIONS por comprobación** y escucha la respuesta en el mismo puerto UDP desde el que envía. No intenta autenticarse cuando recibe un desafío SIP 401. Cualquier respuesta final SIP válida (2xx–6xx, incluidos 401 o 403) indica que el servicio responde; una ausencia de respuesta o un error de red lo marca como caído. El usuario PJSIP debe existir y poder ser identificado por Asterisk: si aparecen `InvalidAccountID` o bloqueos de Fail2ban, pausa el monitor y revisa ese usuario antes de repetir la prueba. La IP pública de Home Assistant puede cambiar si FreePBX identifica el endpoint por usuario.
 
 El monitor **Puerto** comprueba TCP y no sirve para verificar 5060/UDP. Una respuesta como `503 Service Unavailable` contará como «responde», aunque el servicio de llamadas no esté sano; este monitor no verifica registros, llamadas ni calidad de voz.
 
