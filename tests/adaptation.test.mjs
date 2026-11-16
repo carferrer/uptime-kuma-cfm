@@ -70,6 +70,8 @@ test("adaptation applies to upstream and fails closed if run twice", { skip: !pr
     assert.ok(editMonitor.includes('<option value="sip-options">'));
     assert.ok(!editMonitor.includes('<option v-if="!$root.info.isContainer" value="sip-options">'));
     assert.ok(!editMonitor.includes("sipsakPingWarning"));
+    assert.ok(editMonitor.includes('id="sip-from-user"'));
+    assert.ok(existsSync(path.join(dir, "server/monitor-types/sip-options-probe.cjs")));
     const second = spawnSync(process.execPath, [path.join(root, "adaptation/apply.cjs"), dir]);
     assert.notEqual(second.status, 0);
 });
