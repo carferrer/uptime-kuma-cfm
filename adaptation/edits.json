@@ -14,6 +14,18 @@
       "count": 1
     },
     {
+      "file": "server/monitor-types/sip-options.js",
+      "before": "    async runSipSak(hostname, port, timeout) {\n        const { stdout, stderr } = await execFile(\n            \"sipsak\",\n            [\"-s\", `sip:${hostname}:${port}`, \"--from\", `sip:sipsak@${hostname}`, \"-v\"],\n            { timeout }\n        );\n\n        if (!stdout && stderr && stderr.toString()) {\n            throw new Error(`Error in output: ${stderr.toString()}`);\n        }\n        if (stdout && stdout.toString()) {\n            return stdout.toString();\n        } else {\n            throw new Error(\"No output from sipsak\");\n        }\n    }\n\n",
+      "after": "    async runSipSak(hostname, port, timeout) {\n        let stdout, stderr;\n        try {\n            ({ stdout, stderr } = await execFile(\n                \"sipsak\",\n                [\"-s\", `sip:${hostname}:${port}`, \"--from\", `sip:sipsak@${hostname}`, \"-v\"],\n                { timeout }\n            ));\n        } catch (error) {\n            const output = [error.stdout, error.stderr].filter(Boolean).map(value => value.toString()).join(\"\\n\");\n            if (/^\\s*SIP\\/2\\.0\\s+[2-6]\\d\\d\\b/m.test(output)) return output;\n            throw new Error(\"SIP OPTIONS failed without a valid response: \" +\n                (error.stderr?.toString().trim() || error.message).slice(0, 300));\n        }\n        const output = [stdout, stderr].filter(Boolean).map(value => value.toString()).join(\"\\n\");\n        if (!output.trim()) throw new Error(\"No output from sipsak\");\n        return output;\n    }\n\n",
+      "count": 1
+    },
+    {
+      "file": "server/monitor-types/sip-options.js",
+      "before": "    parseSipsakResponse(res, heartbeat) {\n        let lines = res.split(\"\\n\");\n        for (let line of lines) {\n            if (line.includes(\"200 OK\")) {\n                heartbeat.status = UP;\n                heartbeat.msg = line;\n                break;\n            }\n        }\n    }",
+      "after": "    parseSipsakResponse(res, heartbeat) {\n        const response = res.match(/^\\s*SIP\\/2\\.0\\s+[2-6]\\d\\d[^\\r\\n]*/m);\n        if (!response) throw new Error(\"No valid SIP response to OPTIONS\");\n        heartbeat.status = UP;\n        heartbeat.msg = response[0].trim();\n    }",
+      "count": 1
+    },
+    {
       "file": "src/router.js",
       "before": "history: createWebHistory(),",
       "after": "history: createWebHistory(ingressBase()),",
