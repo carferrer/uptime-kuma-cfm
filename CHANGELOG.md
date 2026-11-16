@@ -1,3 +1,11 @@
+# Versión 2026.11.08 (2026-11-16)
+
+- Sustituye `sipsak` por una prueba SIP que envía un único `OPTIONS` y no reintenta la autenticación con contraseña vacía al recibir `401`.
+- Añade «Usuario PJSIP (From)» al monitor para identificar una extensión existente de FreePBX. Los monitores SIP anteriores deben completar este campo antes de reanudarse.
+- Utiliza el mismo puerto UDP para envío y recepción, con `rport`, y acepta cualquier respuesta final SIP 2xx–6xx como señal de que el servicio responde.
+- Elimina el aviso incorrecto de que este monitor no funciona dentro del contenedor.
+- Conserva datos, Ingress y el puerto configurable 3001.
+
 # Versión 2026.11.07 (2026-11-16)
 
 - El monitor SIP Options indica «responde» ante cualquier respuesta SIP final válida (2xx–6xx), como 200, 401 o 403; muestra el código recibido.
