@@ -1,10 +1,3 @@
-# Versión 2026.11.08 (2026-11-16)
-
-- Sustituye `sipsak` por una sonda SIP UDP que envía una sola petición `OPTIONS` y no reintenta la autenticación al recibir `401`.
-- Añade «Usuario PJSIP (From)» al monitor SIP para identificar un endpoint existente sin depender de la IP pública dinámica.
-- Usa el mismo puerto UDP para enviar y recibir, con `rport`, y conserva los monitores y datos existentes. Los monitores SIP anteriores deben completar el nuevo campo antes de reanudarse.
-- Mantiene Ingress y el puerto configurable 3001 sin cambios.
-
 # Versión 2026.11.07 (2026-11-16)
 
 - El monitor SIP Options indica «responde» ante cualquier respuesta SIP final válida (2xx–6xx), como 200, 401 o 403; muestra el código recibido.
