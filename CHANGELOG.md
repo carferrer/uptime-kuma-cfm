@@ -1,3 +1,11 @@
+# Versión 2026.11.09 (2026-11-19)
+
+## What's Changed
+* ⬆️ Update louislam/uptime-kuma to v2.5.12 by @renovate[bot] in https://github.com/carferrer/uptime-kuma-cfm/pull/71
+
+
+**Full Changelog**: https://github.com/carferrer/uptime-kuma-cfm/compare/2026.11.08...2026.11.09
+
 # Versión 2026.11.08 (2026-11-16)
 
 - Sustituye `sipsak` por una prueba SIP que envía un único `OPTIONS` y no reintenta la autenticación con contraseña vacía al recibir `401`.
