@@ -1,4 +1,4 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:21.0.11
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:21.1.0
 FROM ${BUILD_FROM}
 WORKDIR /opt
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
